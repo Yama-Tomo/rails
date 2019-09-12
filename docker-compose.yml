@@ -1,0 +1,37 @@
+version: '3'
+services:
+  ruby:
+    build:
+      context: docker
+      dockerfile: ruby/Dockerfile
+    working_dir: /app
+    volumes:
+      - mutagen_vol:/app
+      - bundle_vol:/usr/local/bundle
+    environment:
+      MYSQL_HOST: mysql
+    tty: true
+    stdin_open: true
+    depends_on:
+      - mysql
+      - mutagen-vol
+  mutagen-vol:
+    image: alpine:latest
+    command: tail -f /dev/null
+    container_name: rails-dev-env-mutagen-vol-container
+    volumes:
+      - mutagen_vol:/data:nocopy
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - mysql_vol:/var/lib/mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+volumes:
+  mutagen_vol:
+    driver: local
+  mysql_vol:
+    driver: local
+  bundle_vol:
+    driver: local

@@ -1,0 +1,6 @@
+sync:
+  development:
+    alpha: "."
+    beta: "docker://rails-dev-env-mutagen-vol-container/data"
+    ignore:
+      vcs: true
